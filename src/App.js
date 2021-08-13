@@ -3,20 +3,27 @@ import './App.css';
 import TodoList from './components/todoList';
 import Textfield from '@atlaskit/textfield';
 import Button from '@atlaskit/button';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { v4 } from 'uuid';
 
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [textInput, setTextInput] = useState("");
 
-  const onTextInputChange = (e) => {
+  const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
-  };
+  }, []);
 
-  const onAddBtnClick = (e) => {
-    setTodoList([...todoList, { id: v4(), name : textInput, isCompleted: false}]);
-  }
+  const onAddBtnClick = useCallback((e) => {
+    setTodoList([...todoList, { id: v4(), name : textInput, isCompleted : false}]);
+
+    setTextInput("");
+  }, [ textInput, todoList ]);
+
+
+  const onCheckBtnClick = useCallback( (id) => {
+    setTodoList(prevState => prevState.map(todo => todo.id === id ? {...todo, isCompleted : true } : todo ))
+  }, []);
   return  (
     <>
       <h3>Danh sach can lam</h3>
@@ -29,7 +36,7 @@ function App() {
       value={ textInput }
       onChange={onTextInputChange}
       ></Textfield>
-      <TodoList todoList = {todoList} />
+      <TodoList todoList = {todoList} onCheckBtnClick={onCheckBtnClick}/>
     </>
   );
 }
