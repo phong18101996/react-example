@@ -7,7 +7,7 @@ const ButtonStyled = styled(Button)`
  margin-top : 5px;
  text-align : left;
 
- ${p => p.isCompleted && css`
+ ${(p) => p.isCompleted && css`
     text-decoration: line-through;
  `}
  
